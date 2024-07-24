@@ -24,5 +24,12 @@ contract SimpleSwap {
          */
 
         // your code start here
+        (uint112 reserve0, uint112 reserve1, ) = IUniswapV2Pair(pool).getReserves();
+        uint256 wethAmount = 1e18 / 2;
+        uint256 usdcToReceive = (997 * wethAmount * reserve0) / (reserve1 * 1000);
+        IERC20(weth).transfer(pool, 1 ether);
+        // Added slippage tolerance of 1%
+        IUniswapV2Pair(pool).swap((usdcToReceive * 99) / 100, wethAmount, address(this), "");
     }
+
 }

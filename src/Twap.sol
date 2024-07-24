@@ -38,11 +38,19 @@ contract Twap {
     //**       ONE HOUR TWAP START      **//
     function first1HourSnapShot() public {
         // your code here
+        (, , uint32 blockTimestampLast) = IUniswapV2Pair(pool).getReserves();
+        first1HourSnapShot_Price0Cumulative = IUniswapV2Pair(pool).price0CumulativeLast();
+        first1HourSnapShot_TimeStamp = blockTimestampLast;
     }
 
     function second1HourSnapShot() public returns (uint224 oneHourTwap) {
         // your code here
-
+        (, , uint32 blockTimestampLast) = IUniswapV2Pair(pool).getReserves();
+        second1HourSnapShot_Price0Cumulative = IUniswapV2Pair(pool).price0CumulativeLast();
+        second1HourSnapShot_TimeStamp = blockTimestampLast;
+        uint256 priceDifference = second1HourSnapShot_Price0Cumulative - first1HourSnapShot_Price0Cumulative;
+        uint256 timeElapsed = second1HourSnapShot_TimeStamp - first1HourSnapShot_TimeStamp;
+        oneHourTwap = uint224((priceDifference) / timeElapsed);
         return oneHourTwap;
     }
     //**       ONE HOUR TWAP END      **//
@@ -50,12 +58,20 @@ contract Twap {
     //**       ONE DAY TWAP START      **//
     function first1DaySnapShot() public {
         // your code here
+        (, , uint32 blockTimestampLast) = IUniswapV2Pair(pool).getReserves();
+        first1DaySnapShot_Price0Cumulative = IUniswapV2Pair(pool).price0CumulativeLast();
+        first1DaySnapShot_TimeStamp = blockTimestampLast;
     }
 
     function second1DaySnapShot() public returns (uint224 oneDayTwap) {
         // your code here
-
-        return (oneDayTwap);
+        (, , uint32 blockTimestampLast) = IUniswapV2Pair(pool).getReserves();
+        second1DaySnapShot_Price0Cumulative = IUniswapV2Pair(pool).price0CumulativeLast();
+        second1DaySnapShot_TimeStamp = blockTimestampLast;
+        uint256 priceDifference = second1DaySnapShot_Price0Cumulative - first1DaySnapShot_Price0Cumulative;
+        uint256 timeElapsed = second1DaySnapShot_TimeStamp - first1DaySnapShot_TimeStamp;
+        oneDayTwap = uint224((priceDifference) / timeElapsed);
+        return oneDayTwap;
     }
     //**       ONE DAY TWAP END      **//
 }

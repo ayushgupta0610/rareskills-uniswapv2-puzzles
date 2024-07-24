@@ -30,12 +30,38 @@ contract MyMevBot {
 
     function performArbitrage() public {
         // your code here
+        // 1. Borrow USDC from flashLenderPool
+        // 2. Swap USDC to WETH
+        // 3. Swap WETH to USDT
+        // 4. Swap USDT to USDC
+        
+        uint256 usdcAmount = 1000 * 1e6;
+        uint256 wethAmount = 0;
+        bytes memory data = "";
+        IUniswapV3Pool(flashLenderPool).flash(address(this), usdcAmount, wethAmount, data);
+
     }
 
     function uniswapV3FlashCallback(uint256 _fee0, uint256, bytes calldata data) external {
         callMeCallMe();
 
         // your code start here
+        uint256 amountIn = 1000 * 1e6;
+        address[] memory path = new address[](4);
+        path[0] = usdc;
+        path[1] = weth;
+        path[2] = usdt;
+        path[3] = usdc;
+        IERC20(usdc).approve(router, amountIn);
+        IUniswapV2Router(router).swapExactTokensForTokens(
+            amountIn,
+            amountIn,
+            path,
+            address(this),
+            block.timestamp
+        );
+        // payback the amount that was borrowed
+        IERC20(usdc).transfer(flashLenderPool, amountIn + _fee0);
     }
 
     function callMeCallMe() private {
