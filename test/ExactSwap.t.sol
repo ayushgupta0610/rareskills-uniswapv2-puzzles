@@ -29,6 +29,7 @@ contract ExactSwapTest is Test {
 
         uint256 foo = (1 ether) - (IUniswapV2Pair(weth).balanceOf(address(exactSwap)));
 
+        // TODO: Understand how this came (lies the answer for amount1Out)
         uint256 d = (foo * 997 * r0) / ((r1 * 1000) + (997 * foo));
 
         uint256 puzzleBal = IUniswapV2Pair(usdc).balanceOf(address(exactSwap));

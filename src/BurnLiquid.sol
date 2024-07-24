@@ -20,5 +20,10 @@ contract BurnLiquid {
          *     to: recipient address to receive tokenA and tokenB.
          */
         // your code here
+        IUniswapV2Pair pair = IUniswapV2Pair(pool);
+        uint256 liquidity = pair.balanceOf(address(this));
+        require(liquidity > 0, "BurnLiquid: liquidity is 0");
+        pair.transfer(address(pair), liquidity);
+        pair.burn(address(this));
     }
 }

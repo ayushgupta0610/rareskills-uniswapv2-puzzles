@@ -19,6 +19,14 @@ contract ExactSwapWithRouter {
 
     function performExactSwapWithRouter(address weth, address usdc, uint256 deadline) public {
         // your code start here
+        IUniswapV2Router _router = IUniswapV2Router(router);
+        IERC20(weth).approve(router, 1 ether);
+        address[] memory path = new address[](2);
+        path[0] = weth;
+        path[1] = usdc;
+        uint256 wethAmountIn = 1 ether; // This needs to be calculated such that we get exactly 1337 USDC out
+        uint256 usdcAmountOutMin = 1337 * 1e6;
+        _router.swapExactTokensForTokens(wethAmountIn, usdcAmountOutMin, path, address(this), deadline);
     }
 }
 

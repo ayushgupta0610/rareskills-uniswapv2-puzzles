@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {Test, console2} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {ExactSwapWithRouter} from "../src/ExactSwapWithRouter.sol";
 import "../src/interfaces/IERC20.sol";
 
@@ -27,7 +27,7 @@ contract ExactSwapTest is Test {
         exactSwapWithRouter.performExactSwapWithRouter(weth, usdc, deadline);
 
         uint256 puzzleBal = IERC20(usdc).balanceOf(address(exactSwapWithRouter));
-
+        console.log("Puzzle Balance: ", puzzleBal);
         require(puzzleBal / 1e6 == 1337, "Puzzle Balance Not 1337 USDC.");
     }
 }

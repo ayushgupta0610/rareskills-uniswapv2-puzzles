@@ -24,5 +24,22 @@ contract ExactSwap {
          */
 
         // your code start here
+        IUniswapV2Pair pair = IUniswapV2Pair(pool);
+        IERC20 wethToken = IERC20(weth);
+        (uint112 reserve0, uint112 reserve1, ) = pair.getReserves();
+        uint256 amountOut = 1337 * 1e6;
+        uint256 amountIn = getAmountIn(amountOut, reserve1, reserve0);
+        wethToken.transfer(address(pair), amountIn);
+        pair.swap(1337 * 1e6, 0, address(this), "");
     }
+
+    // given an output amount of an asset and pair reserves, returns a required input amount of the other asset
+    function getAmountIn(uint amountOut, uint reserveIn, uint reserveOut) internal pure returns (uint amountIn) {
+        require(amountOut > 0, 'INSUFFICIENT_OUTPUT_AMOUNT');
+        require(reserveIn > 0 && reserveOut > 0, 'INSUFFICIENT_LIQUIDITY');
+        uint numerator = reserveIn *amountOut*1000;
+        uint denominator = (reserveOut-amountOut) * 997;
+        amountIn = numerator / denominator + 1;
+    }
+
 }
